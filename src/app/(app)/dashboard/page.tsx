@@ -72,18 +72,18 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+        <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
           Dashboard
         </h1>
         <div className="text-sm text-muted-foreground">
-          Financial Year: {company?.financial_year || "---"}
+          FY: {company?.financial_year || "---"}
         </div>
       </div>
 
       {/* Metrics Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
         <Card className="shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -92,7 +92,7 @@ export default function Dashboard() {
             <TrendingUp className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-lg sm:text-2xl font-bold">
               &#8377;{totalSales.toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
@@ -112,7 +112,7 @@ export default function Dashboard() {
             <ArrowDownRight className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-lg sm:text-2xl font-bold">
               &#8377;{totalPurchase.toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
@@ -132,7 +132,7 @@ export default function Dashboard() {
             <IndianRupee className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">&#8377;1,24,500</div>
+            <div className="text-lg sm:text-2xl font-bold">&#8377;1,24,500</div>
             <p className="text-xs text-muted-foreground mt-1">
               Pending from 12 parties
             </p>
@@ -147,7 +147,7 @@ export default function Dashboard() {
             <Package className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">&#8377;8,45,200</div>
+            <div className="text-lg sm:text-2xl font-bold">&#8377;8,45,200</div>
             <p className="text-xs text-muted-foreground mt-1">
               {items.length} Unique Items
             </p>
@@ -155,14 +155,14 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+      <div className="grid gap-4 lg:grid-cols-7">
         {/* Chart */}
-        <Card className="col-span-4 shadow-sm">
+        <Card className="lg:col-span-4 shadow-sm">
           <CardHeader>
             <CardTitle>Sales vs Purchase</CardTitle>
           </CardHeader>
           <CardContent className="pl-2">
-            <div className="h-[300px]">
+            <div className="h-[220px] sm:h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData}>
                   <XAxis
@@ -203,7 +203,7 @@ export default function Dashboard() {
         </Card>
 
         {/* Recent Transactions */}
-        <Card className="col-span-3 shadow-sm">
+        <Card className="lg:col-span-3 shadow-sm">
           <CardHeader>
             <CardTitle>Recent Vouchers</CardTitle>
           </CardHeader>

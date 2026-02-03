@@ -43,6 +43,7 @@ import {
 } from "@/components/ui/popover";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
+import { Label } from "@/components/ui/label";
 
 const voucherSchema = z.object({
   type: z.enum(["PURCHASE", "SALES", "RECEIPT", "PAYMENT"]),
@@ -223,10 +224,10 @@ export default function VoucherEntryForm({
     voucherType === "PURCHASE" || voucherType === "SALES";
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">Voucher Entry</h1>
-        <div className="flex gap-2 bg-muted p-1 rounded-lg">
+    <div className="space-y-4 sm:space-y-6 max-w-5xl mx-auto">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Voucher Entry</h1>
+        <div className="flex gap-1 sm:gap-2 bg-muted p-1 rounded-lg overflow-x-auto">
           {(["PURCHASE", "SALES", "RECEIPT", "PAYMENT"] as const).map(
             (type) => (
               <button
@@ -236,7 +237,7 @@ export default function VoucherEntryForm({
                   form.setValue("type", type);
                 }}
                 className={cn(
-                  "px-4 py-1.5 text-sm font-medium rounded-md transition-all",
+                  "px-2.5 sm:px-4 py-1.5 text-xs sm:text-sm font-medium rounded-md transition-all whitespace-nowrap",
                   voucherType === type
                     ? "bg-background shadow-sm text-foreground"
                     : "text-muted-foreground hover:text-foreground"
@@ -250,11 +251,11 @@ export default function VoucherEntryForm({
       </div>
 
       <Card>
-        <CardContent className="p-6">
+        <CardContent className="p-4 sm:p-6">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
               {/* Header Section */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <FormField
                   control={form.control}
                   name="date"
@@ -301,7 +302,7 @@ export default function VoucherEntryForm({
                   control={form.control}
                   name="partyLedgerId"
                   render={({ field }) => (
-                    <FormItem className="col-span-2">
+                    <FormItem className="sm:col-span-2 lg:col-span-2">
                       <FormLabel>
                         {voucherType === "PURCHASE"
                           ? "Supplier Account"
@@ -343,40 +344,163 @@ export default function VoucherEntryForm({
 
               {/* Inventory Section (Only for Purchase/Sales) */}
               {isInventoryVoucher ? (
-                <div className="border rounded-md overflow-hidden">
-                  <Table className="dense-table">
-                    <TableHeader className="bg-muted/50">
-                      <TableRow>
-                        <TableHead className="w-[30%]">
-                          Item Details
-                        </TableHead>
-                        <TableHead>Shade</TableHead>
-                        <TableHead>Lot No.</TableHead>
-                        <TableHead className="text-right">Qty</TableHead>
-                        <TableHead className="text-right">Rate</TableHead>
-                        <TableHead className="text-right">Amount</TableHead>
-                        <TableHead className="w-[50px]"></TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {fields.map((field, index) => {
-                        const qty =
-                          form.watch(`items.${index}.quantity`) || 0;
-                        const rate = form.watch(`items.${index}.rate`) || 0;
-                        const amount = qty * rate;
+                <>
+                  {/* Desktop Table View */}
+                  <div className="hidden sm:block border rounded-md overflow-hidden">
+                    <Table className="dense-table">
+                      <TableHeader className="bg-muted/50">
+                        <TableRow>
+                          <TableHead className="w-[30%]">
+                            Item Details
+                          </TableHead>
+                          <TableHead>Shade</TableHead>
+                          <TableHead>Lot No.</TableHead>
+                          <TableHead className="text-right">Qty</TableHead>
+                          <TableHead className="text-right">Rate</TableHead>
+                          <TableHead className="text-right">Amount</TableHead>
+                          <TableHead className="w-[50px]"></TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {fields.map((field, index) => {
+                          const qty =
+                            form.watch(`items.${index}.quantity`) || 0;
+                          const rate = form.watch(`items.${index}.rate`) || 0;
+                          const amount = qty * rate;
 
-                        return (
-                          <TableRow key={field.id}>
-                            <TableCell>
-                              <FormField
-                                control={form.control}
-                                name={`items.${index}.itemId`}
-                                render={({ field }) => (
+                          return (
+                            <TableRow key={field.id}>
+                              <TableCell>
+                                <FormField
+                                  control={form.control}
+                                  name={`items.${index}.itemId`}
+                                  render={({ field }) => (
+                                    <Select
+                                      onValueChange={field.onChange}
+                                      value={field.value}
+                                    >
+                                      <SelectTrigger className="h-8 border-transparent focus:border-input">
+                                        <SelectValue placeholder="Select Item" />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        {items.map((i) => (
+                                          <SelectItem key={i.id} value={i.id}>
+                                            {i.name}
+                                          </SelectItem>
+                                        ))}
+                                      </SelectContent>
+                                    </Select>
+                                  )}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <Input
+                                  {...form.register(`items.${index}.shade`)}
+                                  className="h-8 border-transparent focus:border-input"
+                                  placeholder="Shade"
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <Input
+                                  {...form.register(`items.${index}.lot`)}
+                                  className="h-8 border-transparent focus:border-input"
+                                  placeholder="Lot"
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <Input
+                                  type="number"
+                                  {...form.register(`items.${index}.quantity`, {
+                                    valueAsNumber: true,
+                                  })}
+                                  className="h-8 text-right border-transparent focus:border-input"
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <Input
+                                  type="number"
+                                  {...form.register(`items.${index}.rate`, {
+                                    valueAsNumber: true,
+                                  })}
+                                  className="h-8 text-right border-transparent focus:border-input"
+                                />
+                              </TableCell>
+                              <TableCell className="text-right font-mono text-muted-foreground">
+                                {amount.toFixed(2)}
+                              </TableCell>
+                              <TableCell>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 text-destructive hover:bg-destructive/10"
+                                  onClick={() => remove(index)}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                    <div className="p-2 bg-muted/20 border-t">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() =>
+                          append({
+                            itemId: "",
+                            shade: "",
+                            lot: "",
+                            quantity: 0,
+                            rate: 0,
+                          })
+                        }
+                        className="text-primary hover:text-primary/80"
+                      >
+                        <Plus className="h-4 w-4 mr-2" /> Add Item
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Mobile Card View */}
+                  <div className="sm:hidden space-y-3">
+                    {fields.map((field, index) => {
+                      const qty = form.watch(`items.${index}.quantity`) || 0;
+                      const rate = form.watch(`items.${index}.rate`) || 0;
+                      const amount = qty * rate;
+
+                      return (
+                        <Card key={field.id} className="relative">
+                          <CardContent className="p-4 space-y-3">
+                            <div className="flex items-start justify-between">
+                              <div className="text-xs font-medium text-muted-foreground">
+                                Item #{index + 1}
+                              </div>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7 text-destructive hover:bg-destructive/10 -mt-1 -mr-1"
+                                onClick={() => remove(index)}
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </Button>
+                            </div>
+
+                            <FormField
+                              control={form.control}
+                              name={`items.${index}.itemId`}
+                              render={({ field }) => (
+                                <div className="space-y-1.5">
+                                  <Label className="text-xs">Item</Label>
                                   <Select
                                     onValueChange={field.onChange}
                                     value={field.value}
                                   >
-                                    <SelectTrigger className="h-8 border-transparent focus:border-input">
+                                    <SelectTrigger>
                                       <SelectValue placeholder="Select Item" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -387,64 +511,60 @@ export default function VoucherEntryForm({
                                       ))}
                                     </SelectContent>
                                   </Select>
-                                )}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <Input
-                                {...form.register(`items.${index}.shade`)}
-                                className="h-8 border-transparent focus:border-input"
-                                placeholder="Shade"
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <Input
-                                {...form.register(`items.${index}.lot`)}
-                                className="h-8 border-transparent focus:border-input"
-                                placeholder="Lot"
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <Input
-                                type="number"
-                                {...form.register(`items.${index}.quantity`, {
-                                  valueAsNumber: true,
-                                })}
-                                className="h-8 text-right border-transparent focus:border-input"
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <Input
-                                type="number"
-                                {...form.register(`items.${index}.rate`, {
-                                  valueAsNumber: true,
-                                })}
-                                className="h-8 text-right border-transparent focus:border-input"
-                              />
-                            </TableCell>
-                            <TableCell className="text-right font-mono text-muted-foreground">
-                              {amount.toFixed(2)}
-                            </TableCell>
-                            <TableCell>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 text-destructive hover:bg-destructive/10"
-                                onClick={() => remove(index)}
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
-                    </TableBody>
-                  </Table>
-                  <div className="p-2 bg-muted/20 border-t">
+                                </div>
+                              )}
+                            />
+
+                            <div className="grid grid-cols-2 gap-3">
+                              <div className="space-y-1.5">
+                                <Label className="text-xs">Shade</Label>
+                                <Input
+                                  {...form.register(`items.${index}.shade`)}
+                                  placeholder="Shade"
+                                />
+                              </div>
+                              <div className="space-y-1.5">
+                                <Label className="text-xs">Lot No.</Label>
+                                <Input
+                                  {...form.register(`items.${index}.lot`)}
+                                  placeholder="Lot"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="grid grid-cols-3 gap-3">
+                              <div className="space-y-1.5">
+                                <Label className="text-xs">Qty</Label>
+                                <Input
+                                  type="number"
+                                  {...form.register(`items.${index}.quantity`, {
+                                    valueAsNumber: true,
+                                  })}
+                                />
+                              </div>
+                              <div className="space-y-1.5">
+                                <Label className="text-xs">Rate</Label>
+                                <Input
+                                  type="number"
+                                  {...form.register(`items.${index}.rate`, {
+                                    valueAsNumber: true,
+                                  })}
+                                />
+                              </div>
+                              <div className="space-y-1.5">
+                                <Label className="text-xs">Amount</Label>
+                                <div className="h-9 flex items-center text-sm font-mono text-muted-foreground">
+                                  {amount.toFixed(2)}
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
                     <Button
                       type="button"
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
                       onClick={() =>
                         append({
@@ -455,12 +575,12 @@ export default function VoucherEntryForm({
                           rate: 0,
                         })
                       }
-                      className="text-primary hover:text-primary/80"
+                      className="w-full text-primary"
                     >
                       <Plus className="h-4 w-4 mr-2" /> Add Item
                     </Button>
                   </div>
-                </div>
+                </>
               ) : (
                 /* Accounting Voucher (Receipt/Payment) */
                 <Card className="bg-muted/10 border-dashed">
@@ -497,7 +617,7 @@ export default function VoucherEntryForm({
               {/* Footer / Totals */}
               {isInventoryVoucher && (
                 <div className="flex justify-end">
-                  <div className="w-64 space-y-2">
+                  <div className="w-full sm:w-64 space-y-2">
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Sub Total:</span>
                       <span className="font-mono">{subTotal.toFixed(2)}</span>
@@ -517,7 +637,7 @@ export default function VoucherEntryForm({
               )}
 
               <div className="flex justify-end pt-4">
-                <Button type="submit" size="lg" className="w-32">
+                <Button type="submit" size="lg" className="w-full sm:w-32">
                   <Save className="mr-2 h-4 w-4" /> Save
                 </Button>
               </div>

@@ -5,8 +5,8 @@ import { Scale } from "lucide-react";
 
 export default function TrialBalancePage() {
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold tracking-tight">Trial Balance</h1>
+    <div className="space-y-4 sm:space-y-6">
+      <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Trial Balance</h1>
       <Card>
         <CardHeader>
           <CardTitle>Trial Balance Statement</CardTitle>

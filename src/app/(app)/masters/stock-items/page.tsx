@@ -25,13 +25,13 @@ export default function StockItemsPage() {
   }, [company?.id, supabase]);
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold tracking-tight">Stock Items</h1>
+    <div className="space-y-4 sm:space-y-6">
+      <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Stock Items</h1>
       <Card>
         <CardHeader>
           <CardTitle>All Stock Items</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>

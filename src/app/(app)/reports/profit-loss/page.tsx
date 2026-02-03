@@ -5,8 +5,8 @@ import { TrendingUp } from "lucide-react";
 
 export default function ProfitLossPage() {
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold tracking-tight">Profit &amp; Loss</h1>
+    <div className="space-y-4 sm:space-y-6">
+      <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Profit &amp; Loss</h1>
       <Card>
         <CardHeader>
           <CardTitle>Profit &amp; Loss Statement</CardTitle>

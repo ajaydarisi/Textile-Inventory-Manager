@@ -5,8 +5,8 @@ import { BookOpen } from "lucide-react";
 
 export default function LedgerReportPage() {
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold tracking-tight">Ledger Report</h1>
+    <div className="space-y-4 sm:space-y-6">
+      <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Ledger Report</h1>
       <Card>
         <CardHeader>
           <CardTitle>Ledger Statement</CardTitle>
