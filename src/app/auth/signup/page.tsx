@@ -25,6 +25,8 @@ export default function SignUpPage() {
     setLoading(true);
 
     // 1. Create auth user
+    const redirectTo = `${window.location.origin}/auth/callback`;
+
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
@@ -33,6 +35,7 @@ export default function SignUpPage() {
           full_name: fullName,
           company_name: companyName,
         },
+        emailRedirectTo: redirectTo,
       },
     });
 
